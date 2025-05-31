@@ -7,6 +7,41 @@ from inventory.models import Product
 from .models import AmazonSettings
 from .forms import AmazonSettingsForm
 from sp_api.api import Products
+import os
+import logging
+
+logger = logging.getLogger(__name__)
+
+@login_required
+def auth_callback(request):
+    """
+    معالجة استجابة Amazon OAuth بعد تسجيل الدخول
+    """
+    try:
+        # الحصول على رمز التفويض من العنوان
+        auth_code = request.GET.get('spapi_oauth_code')
+        
+        if not auth_code:
+            messages.error(request, "لم يتم استلام رمز التفويض من أمازون.")
+            return redirect('amazon_settings')
+        
+        # الحصول على الإعدادات الحالية
+        settings_obj, created = AmazonSettings.objects.get_or_create()
+        
+        # هنا سنقوم بتخزين رمز التفويض في الإعدادات
+        settings_obj.refresh_token = auth_code
+        settings_obj.save()
+        
+        # يمكن هنا إضافة منطق إضافي لتبديل رمز التفويض بـ refresh token
+        # لكن هذا يعتمد على كيفية تنفيذ مكتبة sp_api
+        
+        messages.success(request, "تم استلام رمز التفويض من أمازون بنجاح وتخزينه.")
+        return redirect('amazon_settings')
+        
+    except Exception as e:
+        logger.error(f"خطأ في معالجة استجابة OAuth: {str(e)}")
+        messages.error(request, f"حدث خطأ أثناء معالجة استجابة أمازون: {str(e)}")
+        return redirect('amazon_settings')
 
 @login_required
 def import_products(request):
