@@ -99,6 +99,24 @@ pip install -r requirements.txt
 ### ملاحظة هامة
 في بيئة الإنتاج، يجب تنفيذ الكود الخاص بتفعيل PyMySQL قبل استيراد أي كود من Django، وهذا هو السبب وراء وضعه في ملف `__init__.py` للمشروع.
 
+### إعداد قاعدة بيانات MySQL لدعم اللغة العربية
+
+لدعم اللغة العربية بشكل صحيح في قاعدة بيانات MySQL، يجب إعداد قاعدة البيانات والجداول لاستخدام ترميز UTF-8. تم تكوين الاتصال بقاعدة البيانات في ملف `settings.py` لاستخدام ترميز `utf8mb4`.
+
+#### إنشاء قاعدة بيانات جديدة بترميز UTF-8
+```sql
+CREATE DATABASE mwheba_fbm CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+#### تحويل قاعدة بيانات موجودة إلى UTF-8
+يمكنك استخدام ملف `convert_db_to_utf8mb4.sql` الموجود في المشروع لتحويل قاعدة بيانات موجودة إلى ترميز UTF-8:
+```bash
+# في cPanel phpMyAdmin، قم باستيراد ملف convert_db_to_utf8mb4.sql
+
+# أو من سطر الأوامر
+mysql -u username -p mwheba_fbm < convert_db_to_utf8mb4.sql
+```
+
 ## هيكل المشروع
 
 ```
