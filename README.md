@@ -72,14 +72,16 @@ python manage.py runserver
 
 تم تفعيل PyMySQL كبديل لـ MySQLdb في بيئة الإنتاج لاستخدامه مع قواعد بيانات MySQL. هذا مفيد بشكل خاص في بيئات استضافة cPanel حيث قد يكون من الصعب تثبيت MySQLdb.
 
-PyMySQL تم تكوينه في:
-1. ملف `fbm_sync_project/wsgi.py`
-2. ملف `passenger_wsgi.py`
+PyMySQL تم تكوينه في الملفات التالية:
+1. ملف `fbm_sync_project/__init__.py` (الموقع الرئيسي)
+2. ملف `fbm_sync_project/wsgi.py`
+3. ملف `passenger_wsgi.py`
 
 التكوين يتم باستخدام الكود التالي:
 ```python
 try:
     import pymysql
+    pymysql.version_info = (1, 4, 6, 'final', 0)  # تغيير رقم الإصدار لتفادي مشاكل التوافق
     pymysql.install_as_MySQLdb()
 except ImportError:
     pass
@@ -93,6 +95,9 @@ pip install PyMySQL==1.1.0
 ```bash
 pip install -r requirements.txt
 ```
+
+### ملاحظة هامة
+في بيئة الإنتاج، يجب تنفيذ الكود الخاص بتفعيل PyMySQL قبل استيراد أي كود من Django، وهذا هو السبب وراء وضعه في ملف `__init__.py` للمشروع.
 
 ## هيكل المشروع
 
