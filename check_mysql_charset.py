@@ -39,6 +39,10 @@ def check_database_charset():
         WHERE schema_name = %s
     """, [db_name])
     
+    if not db_charset:
+        print(f"لم يتم العثور على قاعدة البيانات {db_name}")
+        return
+        
     print(f"ترميز قاعدة البيانات: {db_charset[0][0]}")
     print(f"نظام المقارنة (Collation): {db_charset[0][1]}")
     
@@ -58,13 +62,14 @@ def check_database_charset():
     print("\n=== ترميز الجداول ===")
     for table in tables:
         table_name = table[0]
-        table_info = execute_sql(f"""
+        table_info = execute_sql("""
             SELECT table_name, table_collation
             FROM information_schema.TABLES
             WHERE table_schema = %s AND table_name = %s
         """, [db_name, table_name])
         
-        print(f"الجدول {table_name}: {table_info[0][1]}")
+        if table_info:
+            print(f"الجدول {table_name}: {table_info[0][1]}")
     
     # فحص كل جدول بشكل مفصل
     print("\n=== الأعمدة النصية التي لا تستخدم UTF-8MB4 ===")
@@ -72,18 +77,21 @@ def check_database_charset():
     
     for table in tables:
         table_name = table[0]
-        columns = execute_sql(f"""
-            SELECT column_name, character_set_name, collation_name, data_type
-            FROM information_schema.COLUMNS
-            WHERE table_schema = %s AND table_name = %s
-            AND data_type IN ('varchar', 'char', 'text', 'mediumtext', 'longtext', 'enum', 'set')
-            AND (character_set_name != 'utf8mb4' OR collation_name NOT LIKE 'utf8mb4%')
-        """, [db_name, table_name])
-        
-        if columns:
-            has_non_utf8mb4 = True
-            for col in columns:
-                print(f"الجدول {table_name}, العمود {col[0]}, النوع {col[3]}, الترميز {col[1]}, نظام المقارنة {col[2]}")
+        try:
+            columns = execute_sql("""
+                SELECT column_name, character_set_name, collation_name, data_type
+                FROM information_schema.COLUMNS
+                WHERE table_schema = %s AND table_name = %s
+                AND data_type IN ('varchar', 'char', 'text', 'mediumtext', 'longtext', 'enum', 'set')
+                AND (character_set_name != 'utf8mb4' OR collation_name NOT LIKE 'utf8mb4%')
+            """, [db_name, table_name])
+            
+            if columns:
+                has_non_utf8mb4 = True
+                for col in columns:
+                    print(f"الجدول {table_name}, العمود {col[0]}, النوع {col[3]}, الترميز {col[1] or 'غير محدد'}, نظام المقارنة {col[2] or 'غير محدد'}")
+        except Exception as e:
+            print(f"خطأ عند فحص الجدول {table_name}: {e}")
     
     if not has_non_utf8mb4:
         print("لا توجد أعمدة نصية تستخدم ترميزًا غير UTF-8MB4")
