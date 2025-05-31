@@ -36,6 +36,7 @@ env/
 
 # Environment variables
 .env
+env_production.txt
 
 # Static files
 staticfiles/
@@ -45,7 +46,13 @@ staticfiles/
 .vscode/
 *.swp
 *.swo
+pyrightconfig.json
+django_stubs.py
 
 # OS specific
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Deployment related
+passenger_wsgi.py
+cpanel_deployment_guide.txt 
