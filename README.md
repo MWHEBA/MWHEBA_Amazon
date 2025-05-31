@@ -117,6 +117,48 @@ CREATE DATABASE mwheba_fbm CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 mysql -u username -p mwheba_fbm < convert_db_to_utf8mb4.sql
 ```
 
+## إصلاح مشكلة الترميز العربي في MySQL
+
+عند استخدام قاعدة بيانات MySQL مع المحتوى العربي، قد تواجه خطأ:
+```
+Incorrect string value: '\xD9\x85\xD9\x86\xD8\xAA...' for column...
+```
+
+هذا بسبب إعدادات الترميز الافتراضية في MySQL التي لا تدعم Unicode بشكل كامل. 
+
+### الحل المتكامل
+
+تم توفير سكريبتات خاصة لإصلاح هذه المشكلة:
+
+1. `fix_charset_script.py` - لتحويل قاعدة البيانات بالكامل إلى UTF-8MB4
+2. `check_mysql_charset.py` - للتحقق من إعدادات الترميز في قاعدة البيانات
+
+استخدم السكريبت الأول لإصلاح المشكلة:
+
+```bash
+python fix_charset_script.py
+```
+
+ثم تحقق من نجاح العملية باستخدام:
+
+```bash
+python check_mysql_charset.py
+```
+
+للحصول على تعليمات مفصلة، راجع الملف `mysql_utf8_cpanel_guide.md` في المشروع.
+
+### تكوين Django الصحيح
+
+تأكد من وجود هذه الإعدادات في `settings.py`:
+
+```python
+'OPTIONS': {
+    'charset': 'utf8mb4',
+    'use_unicode': True,
+    'init_command': "SET sql_mode='STRICT_TRANS_TABLES', character_set_connection=utf8mb4, collation_connection=utf8mb4_unicode_ci",
+},
+```
+
 ## هيكل المشروع
 
 ```
