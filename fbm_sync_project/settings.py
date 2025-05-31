@@ -174,7 +174,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Login URL
 LOGIN_URL = os.environ.get('LOGIN_URL', 'login')
 LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL', 'dashboard')
-LOGOUT_REDIRECT_URL = os.environ.get('LOGOUT_REDIRECT_URL', 'login')
+LOGOUT_REDIRECT_URL = os.environ.get('LOGOUT_REDIRECT_URL', 'home')
 
 # Amazon SP-API Settings
 AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
