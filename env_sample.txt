@@ -1,0 +1,46 @@
+# إعدادات جانجو الأساسية
+SECRET_KEY=generate-a-secure-key-here
+DEBUG=False
+
+# إعدادات المضيفين المسموح بهم
+ALLOWED_HOSTS=fbm.mwheba.net,www.fbm.mwheba.net
+
+# إعدادات قاعدة البيانات
+DB_ENGINE=django.db.backends.mysql
+DB_NAME=mwheba_fbm
+DB_USER=mwheba_fbmuser
+DB_PASSWORD=your-strong-password-here
+DB_HOST=localhost
+DB_PORT=3306
+
+# إعدادات الملفات الثابتة والوسائط
+STATIC_URL=/static/
+STATIC_ROOT=/home/mwheba/fbm.mwheba.net/static/
+MEDIA_URL=/media/
+MEDIA_ROOT=/home/mwheba/fbm.mwheba.net/media/
+
+# إعدادات الدخول والخروج
+LOGIN_URL=login
+LOGIN_REDIRECT_URL=dashboard
+LOGOUT_REDIRECT_URL=login
+
+# إعدادات اللغة والتوقيت
+LANGUAGE_CODE=en-us
+TIME_ZONE=Africa/Cairo
+
+# إعدادات Amazon SP-API
+AWS_ACCESS_KEY=your-aws-access-key
+AWS_SECRET_KEY=your-aws-secret-key
+ROLE_ARN=your-role-arn
+LWA_CLIENT_ID=your-lwa-client-id
+LWA_CLIENT_SECRET=your-lwa-client-secret
+REFRESH_TOKEN=your-refresh-token
+
+# إعدادات البريد الإلكتروني
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=mail.mwheba.net
+EMAIL_PORT=587
+EMAIL_HOST_USER=info@mwheba.net
+EMAIL_HOST_PASSWORD=your-email-password
+EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL=info@mwheba.net 

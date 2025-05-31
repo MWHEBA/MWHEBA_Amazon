@@ -1,0 +1,99 @@
+# دليل رفع المشروع على cPanel (fbm.mwheba.net)
+
+## الخطوة 1: إعداد قاعدة البيانات في cPanel
+1. سجل دخول إلى لوحة تحكم cPanel
+2. انتقل إلى قسم "قواعد البيانات" ثم "قواعد بيانات MySQL"
+3. أنشئ قاعدة بيانات جديدة، على سبيل المثال: `mwheba_fbm`
+4. أنشئ مستخدم جديد لقاعدة البيانات، على سبيل المثال: `mwheba_fbmuser`
+5. قم بإعطاء المستخدم كافة الصلاحيات على قاعدة البيانات
+
+## الخطوة 2: رفع ملفات المشروع إلى cPanel
+1. قم بإنشاء ملف `.env` باستخدام محتوى ملف `env_sample.txt` مع تعديل القيم حسب بيانات حسابك
+2. قم بضغط ملفات المشروع (ما عدا المجلدات التالية: venv, __pycache__, .git)
+3. ارفع الملف المضغوط إلى cPanel باستخدام مدير الملفات أو FTP
+4. قم بفك ضغط الملفات في المجلد المناسب في cPanel، مثال: `/home/mwheba/fbm.mwheba.net/`
+
+## الخطوة 3: إعداد بيئة Python الافتراضية في cPanel
+1. اتصل بالخادم عبر SSH:
+   ```
+   ssh username@your_cpanel_server
+   ```
+2. انتقل إلى مجلد المشروع:
+   ```
+   cd /home/mwheba/fbm.mwheba.net/
+   ```
+3. أنشئ بيئة افتراضية جديدة:
+   ```
+   python3 -m venv venv
+   ```
+4. قم بتفعيل البيئة الافتراضية:
+   ```
+   source venv/bin/activate
+   ```
+5. قم بتثبيت المتطلبات:
+   ```
+   pip install -r requirements.txt
+   ```
+
+## الخطوة 4: إعداد ملف .env في cPanel
+1. تأكد من وجود ملف `.env` في مجلد المشروع الرئيسي
+2. تأكد من تعديل القيم التالية:
+   - `SECRET_KEY`: مفتاح آمن وعشوائي
+   - `ALLOWED_HOSTS`: أسماء النطاقات المسموح بها
+   - معلومات قاعدة البيانات (تم إنشاؤها في الخطوة 1)
+   - مسارات الملفات الثابتة والوسائط
+   - بيانات اعتماد Amazon SP-API
+   - إعدادات البريد الإلكتروني
+
+## الخطوة 5: تشغيل وحدات Django الإدارية
+1. قم بإنشاء جداول قاعدة البيانات:
+   ```
+   python manage.py migrate
+   ```
+2. قم بإنشاء مستخدم مشرف:
+   ```
+   python manage.py createsuperuser
+   ```
+3. قم بجمع الملفات الثابتة:
+   ```
+   python manage.py collectstatic
+   ```
+
+## الخطوة 6: إعداد تطبيق Python في cPanel
+1. انتقل إلى قسم "إعداد تطبيق Python" في cPanel
+2. قم بإنشاء تطبيق جديد مع الإعدادات التالية:
+   - النطاق: fbm.mwheba.net
+   - مسار التطبيق: /home/mwheba/fbm.mwheba.net
+   - بيئة Python: استخدم البيئة الافتراضية التي أنشأتها
+   - نقطة الدخول: wsgi.py (مسار كامل: /home/mwheba/fbm.mwheba.net/fbm_sync_project/wsgi.py)
+   - نمط WSGI: django
+
+## الخطوة 7: تكوين ملفات .htaccess
+1. قم بإنشاء ملف .htaccess في المجلد العام:
+   ```
+   <IfModule mod_rewrite.c>
+       RewriteEngine On
+       RewriteCond %{HTTPS} off
+       RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+       
+       RewriteCond %{REQUEST_URI} !^/static/
+       RewriteCond %{REQUEST_URI} !^/media/
+       RewriteCond %{REQUEST_URI} !^/.well-known/
+       RewriteRule ^(.*)$ /passenger_wsgi.py/$1 [QSA,L]
+   </IfModule>
+   ```
+
+## الخطوة 8: اختبار التطبيق
+1. تأكد من أن التطبيق يعمل بشكل صحيح بفتح https://fbm.mwheba.net في المتصفح
+2. تحقق من إمكانية الوصول إلى لوحة الإدارة: https://fbm.mwheba.net/admin/
+
+## ملاحظات هامة
+- تأكد من أن جميع المجلدات لها الصلاحيات المناسبة (755 للمجلدات و644 للملفات)
+- قم بتحديث ملف README.md مع أي تغييرات هيكلية أو منطقية تقوم بها
+- قم بإجراء نسخ احتياطي لقاعدة البيانات بانتظام
+- ضع في اعتبارك إعداد وظائف cron للمهام الدورية
+
+## استكشاف الأخطاء وإصلاحها
+- تحقق من سجلات الخطأ في cPanel (Error Logs)
+- استخدم `python manage.py check --deploy` للتحقق من إعدادات الأمان قبل النشر
+- تأكد من أن جميع المكتبات المطلوبة مثبتة في البيئة الافتراضية 

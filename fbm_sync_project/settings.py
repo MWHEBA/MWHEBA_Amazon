@@ -36,7 +36,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dw5ub!c489kkd244#^9@f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# قراءة المضيفين المسموح بهم من المتغيرات البيئية
+allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1')
+ALLOWED_HOSTS = allowed_hosts_str.split(',')
 
 
 # Application definition
@@ -88,12 +90,30 @@ WSGI_APPLICATION = 'fbm_sync_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# استخدام إعدادات قاعدة البيانات من المتغيرات البيئية
+default_db_engine = os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3')
+if default_db_engine == 'django.db.backends.sqlite3':
+    DATABASES = {
+        'default': {
+            'ENGINE': default_db_engine,
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    # استخدام قاعدة بيانات خارجية من المتغيرات البيئية (مثل MySQL في cPanel)
+    DATABASES = {
+        'default': {
+            'ENGINE': default_db_engine,
+            'NAME': os.environ.get('DB_NAME', ''),
+            'USER': os.environ.get('DB_USER', ''),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', ''),
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
+    }
 
 
 # Password validation
@@ -118,9 +138,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = os.environ.get('LANGUAGE_CODE', 'en-us')
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
 
 USE_I18N = True
 
@@ -130,11 +150,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = os.environ.get('STATIC_URL', 'static/')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))
+
+# Media files
+MEDIA_URL = os.environ.get('MEDIA_URL', 'media/')
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -142,9 +166,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Login URL
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard'
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = os.environ.get('LOGIN_URL', 'login')
+LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL', 'dashboard')
+LOGOUT_REDIRECT_URL = os.environ.get('LOGOUT_REDIRECT_URL', 'login')
 
 # Amazon SP-API Settings
 AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
@@ -152,4 +176,13 @@ AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
 ROLE_ARN = os.environ.get('ROLE_ARN')
 LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
 LWA_CLIENT_SECRET = os.environ.get('LWA_CLIENT_SECRET')
-REFRESH_TOKEN = os.environ.get('REFRESH_TOKEN') 
+REFRESH_TOKEN = os.environ.get('REFRESH_TOKEN')
+
+# إعدادات البريد الإلكتروني
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'webmaster@localhost') 
