@@ -13,6 +13,7 @@
 - Python 3.9+
 - Django 4.2+
 - python-amazon-sp-api
+- PyMySQL (لبيئة الإنتاج)
 
 ## التثبيت
 
@@ -63,6 +64,34 @@ python manage.py createsuperuser
 7. تشغيل الخادم المحلي:
 ```bash
 python manage.py runserver
+```
+
+## إعداد بيئة الإنتاج
+
+### تفعيل PyMySQL
+
+تم تفعيل PyMySQL كبديل لـ MySQLdb في بيئة الإنتاج لاستخدامه مع قواعد بيانات MySQL. هذا مفيد بشكل خاص في بيئات استضافة cPanel حيث قد يكون من الصعب تثبيت MySQLdb.
+
+PyMySQL تم تكوينه في:
+1. ملف `fbm_sync_project/wsgi.py`
+2. ملف `passenger_wsgi.py`
+
+التكوين يتم باستخدام الكود التالي:
+```python
+try:
+    import pymysql
+    pymysql.install_as_MySQLdb()
+except ImportError:
+    pass
+```
+
+تأكد من أن PyMySQL مثبت في بيئة الإنتاج باستخدام:
+```bash
+pip install PyMySQL==1.1.0
+```
+أو عن طريق تثبيت جميع المتطلبات:
+```bash
+pip install -r requirements.txt
 ```
 
 ## هيكل المشروع

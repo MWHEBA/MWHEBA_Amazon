@@ -26,6 +26,14 @@ except Exception:
     # تجاهل الأخطاء إذا لم يتم العثور على ملف .env
     pass
 
+# تفعيل PyMySQL كبديل لـ MySQLdb في بيئة الإنتاج
+try:
+    import pymysql
+    pymysql.install_as_MySQLdb()
+except ImportError:
+    # تجاهل الأخطاء إذا لم يتم العثور على مكتبة pymysql
+    pass
+
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fbm_sync_project.settings')
