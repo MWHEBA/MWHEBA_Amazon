@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}اختبار الإشعارات{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">اختبار نظام الإشعارات</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h4>إشعارات قياسية</h4>
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                <button class="btn btn-success" onclick="showSuccessNotification('تم تنفيذ العملية بنجاح')">نجاح</button>
+                                <button class="btn btn-danger" onclick="showErrorNotification('حدث خطأ أثناء تنفيذ العملية')">خطأ</button>
+                                <button class="btn btn-warning" onclick="showWarningNotification('يرجى الانتباه إلى هذا التحذير')">تحذير</button>
+                                <button class="btn btn-info" onclick="showInfoNotification('هذه معلومات مهمة')">معلومات</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h4>إشعارات متقدمة</h4>
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                <button class="btn btn-outline-secondary" onclick="showConfirmNotification('هل أنت متأكد من حذف هذا العنصر؟', 'تأكيد الحذف', function() { showSuccessNotification('تم الحذف بنجاح'); })">تأكيد</button>
+                                <button class="btn btn-outline-primary" onclick="showInputNotification('أدخل اسمك', 'إدخال بيانات', function(value) { showSuccessNotification('مرحباً ' + value); })">إدخال</button>
+                                <button class="btn btn-outline-dark" onclick="showCustomNotification({
+                                    title: 'إشعار مخصص',
+                                    text: 'هذا إشعار مخصص مع أزرار وخيارات مختلفة',
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'موافق',
+                                    cancelButtonText: 'إلغاء',
+                                    confirmButtonColor: '#6f42c1',
+                                    cancelButtonColor: '#6c757d'
+                                })">مخصص</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>اختبارات إضافية</h4>
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                <button class="btn btn-primary" onclick="testSweetAlert()">اختبار SweetAlert مباشرة</button>
+                                <button class="btn btn-secondary" onclick="testWindowShowNotification()">اختبار window.showNotification</button>
+                                <button class="btn btn-dark" onclick="testShowAlert()">اختبار showAlert</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // دوال اختبار إضافية
+    function testSweetAlert() {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'اختبار SweetAlert',
+                text: 'هذا اختبار مباشر لمكتبة SweetAlert2',
+                icon: 'success',
+                confirmButtonText: 'تم'
+            });
+        } else {
+            alert('مكتبة SweetAlert2 غير محملة!');
+        }
+    }
+    
+    function testWindowShowNotification() {
+        if (typeof window.showNotification === 'function') {
+            window.showNotification('success', 'هذا اختبار لدالة window.showNotification', 'اختبار');
+        } else {
+            alert('دالة window.showNotification غير معرفة!');
+        }
+    }
+    
+    function testShowAlert() {
+        if (typeof showAlert === 'function') {
+            showAlert('هذا اختبار لدالة showAlert', 'success');
+        } else {
+            alert('دالة showAlert غير معرفة!');
+        }
+    }
+</script>
+{% endblock %} 

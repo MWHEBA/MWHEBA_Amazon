@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}{% if product %}تعديل {{ product.title }}{% else %}إضافة منتج جديد{% endif %} | نظام مزامنة FBM{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">لوحة التحكم</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product_list' %}">المنتجات</a></li>
+                <li class="breadcrumb-item active">
+                    {% if product %}تعديل {{ product.title }}{% else %}إضافة منتج جديد{% endif %}
+                </li>
+            </ol>
+        </nav>
+        <h1 class="display-6 mb-3">
+            {% if product %}
+                <i class="fas fa-edit me-2 text-warning"></i> تعديل المنتج
+            {% else %}
+                <i class="fas fa-plus me-2 text-success"></i> إضافة منتج جديد
+            {% endif %}
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    {% if product %}
+                        <i class="fas fa-edit me-2"></i> تعديل المنتج: {{ product.title }}
+                    {% else %}
+                        <i class="fas fa-plus me-2"></i> إضافة منتج جديد
+                    {% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">عنوان المنتج</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="invalid-feedback d-block">{{ form.title.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.local_sku.id_for_label }}" class="form-label">رمز المنتج المحلي</label>
+                            {{ form.local_sku }}
+                            {% if form.local_sku.errors %}
+                                <div class="invalid-feedback d-block">{{ form.local_sku.errors.0 }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">رمز المنتج الخاص بك داخل النظام</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.amazon_sku.id_for_label }}" class="form-label">رمز المنتج على أمازون</label>
+                            {{ form.amazon_sku }}
+                            {% if form.amazon_sku.errors %}
+                                <div class="invalid-feedback d-block">{{ form.amazon_sku.errors.0 }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">رمز المنتج (SKU) على أمازون</small>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.quantity.id_for_label }}" class="form-label">الكمية</label>
+                            {{ form.quantity }}
+                            {% if form.quantity.errors %}
+                                <div class="invalid-feedback d-block">{{ form.quantity.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mt-4">
+                                {{ form.is_fbm }}
+                                <label class="form-check-label" for="{{ form.is_fbm.id_for_label }}">
+                                    منتج FBM (يتم بيعه عبر أمازون)
+                                </label>
+                                {% if form.is_fbm.errors %}
+                                    <div class="invalid-feedback d-block">{{ form.is_fbm.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'product_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> 
+                            {% if product %}حفظ التغييرات{% else %}إضافة المنتج{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-question-circle me-2"></i>
+                    تعليمات
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6 class="fw-bold">معلومات هامة:</h6>
+                <ul>
+                    <li>يجب إدخال عنوان المنتج بشكل واضح.</li>
+                    <li>رمز المنتج المحلي يجب أن يكون فريدًا في النظام.</li>
+                    <li>رمز المنتج على أمازون يجب أن يتطابق مع الرمز المستخدم في حسابك على أمازون.</li>
+                    <li>إذا كان المنتج يباع عبر أمازون FBM، قم بتفعيل خيار "منتج FBM".</li>
+                </ul>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    المنتجات المميزة كـ FBM سيتم مزامنة كمياتها مع أمازون تلقائيًا عند تسجيل عمليات البيع.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

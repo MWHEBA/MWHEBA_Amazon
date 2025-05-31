@@ -1,0 +1,201 @@
+/* 
+ * أنماط الصفحة الرئيسية
+ */
+
+// متغيرات الألوان
+$primary-color: #0d6efd;
+$secondary-color: #6c757d;
+$accent-color: #198754;
+$light-bg: #f8f9fa;
+$dark-text: #212529;
+$white: #ffffff;
+
+// متغيرات التباعد
+$section-spacing: 5rem;
+$component-spacing: 2rem;
+
+// Mixins
+@mixin section-padding {
+  padding: 5rem 0;
+}
+
+@mixin card-shadow {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+// أنماط الهيرو
+.hero-section {
+  background: linear-gradient(135deg, $primary-color, darken($primary-color, 15%));
+  color: $white;
+  @include section-padding;
+  margin-top: -1.5rem;
+  
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  
+  p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+  
+  .btn-hero {
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .hero-image {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+// أنماط المميزات
+.features-section {
+  @include section-padding;
+  background-color: $light-bg;
+  
+  .section-title {
+    text-align: center;
+    margin-bottom: $component-spacing * 2;
+    
+    h2 {
+      font-weight: 700;
+      color: $dark-text;
+      position: relative;
+      display: inline-block;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background-color: $primary-color;
+      }
+    }
+  }
+  
+  .feature-card {
+    background: $white;
+    border-radius: 8px;
+    padding: 2rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    @include card-shadow;
+    
+    &:hover {
+      transform: translateY(-10px);
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      color: $primary-color;
+      margin-bottom: 1.5rem;
+    }
+    
+    h3 {
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+// أنماط قسم الاتصال
+.cta-section {
+  background-color: $primary-color;
+  color: $white;
+  @include section-padding;
+  text-align: center;
+  
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+  
+  .btn-cta {
+    background-color: $white;
+    color: $primary-color;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: darken($white, 10%);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// أنماط التذييل
+.footer-links {
+  h5 {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    
+    li {
+      margin-bottom: 0.75rem;
+      
+      a {
+        color: $secondary-color;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          color: $primary-color;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+// أنماط صفحة الشروط والأحكام وسياسة الخصوصية
+.legal-page {
+  padding: 3rem 0;
+  
+  h1 {
+    margin-bottom: 2rem;
+  }
+  
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    margin-bottom: 1.5rem;
+  }
+  
+  ul {
+    margin-bottom: 1.5rem;
+  }
+} 

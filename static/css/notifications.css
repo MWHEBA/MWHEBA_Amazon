@@ -1,0 +1,442 @@
+/**
+ * تخصيص مظهر الإشعارات
+ */
+
+/* تخصيص مظهر SweetAlert2 */
+.swal2-popup {
+  font-family: 'Cairo', sans-serif;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  text-align: center !important;
+}
+
+/* تنسيقات خاصة للتوستر */
+.toast-container {
+  position: fixed !important;
+  z-index: 9999 !important;
+  top: 20px !important;
+  right: 20px !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: auto !important;
+  max-width: 380px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background-color: transparent !important;
+  pointer-events: none;
+}
+
+.toast-popup {
+  pointer-events: auto;
+}
+
+/* ضمان ظهور الإشعارات فوق جميع العناصر */
+.swal2-container {
+  position: fixed !important;
+  z-index: 9999 !important;
+}
+
+.swal2-container.swal2-top-end {
+  top: 20px !important;
+  right: 20px !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: auto !important;
+  max-width: 380px !important;
+}
+
+.swal2-popup {
+  pointer-events: auto;
+}
+
+/* تنسيق خاص للإشعارات العلوية */
+.swal2-top-notification {
+  z-index: 9999 !important;
+}
+
+/* تخصيص مظهر إشعارات Toast - تصميم احترافي */
+.swal2-popup.swal2-toast {
+  padding: 0;
+  background: #ffffff;
+  box-shadow: 0 8px 25px -5px rgba(45, 62, 80, 0.15);
+  border-radius: 12px;
+  width: auto;
+  max-width: 380px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  border: none;
+  z-index: 9999 !important;
+  animation: slideInRight 0.3s ease forwards, fadeIn 0.3s ease forwards;
+  position: relative !important;
+  margin: 0 !important;
+}
+
+/* تأثيرات حركية للتوستر */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* تخصيص أيقونة التوستر */
+.swal2-popup.swal2-toast .swal2-icon {
+  margin: 0 !important;
+  width: 2em !important;
+  min-width: 2em !important;
+  height: 2em !important;
+  margin-right: 0.5rem !important;
+  margin-left: 1rem !important;
+}
+
+/* تخصيص عنوان التوستر */
+.swal2-popup.swal2-toast .swal2-title {
+  margin: 0;
+  padding: 1rem 0.5rem 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  flex-grow: 1;
+  text-align: right;
+}
+
+/* شريط التقدم الزمني */
+.swal2-popup.swal2-toast .swal2-timer-progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  opacity: 0.7;
+}
+
+.swal2-popup.swal2-toast .swal2-timer-progress-bar {
+  height: 3px;
+  opacity: 1;
+}
+
+/* إصلاح مشكلة الإزاحة - منع أي تغييرات على المستند */
+body.swal2-shown {
+  overflow-y: auto !important;
+  padding-right: 0 !important;
+  overflow-x: hidden !important;
+}
+
+body.swal2-toast-shown {
+  overflow-y: auto !important;
+  padding-right: 0 !important;
+  overflow-x: hidden !important;
+}
+
+/* إخفاء الخلفية الشفافة للإشعارات */
+.swal2-container.swal2-shown {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.swal2-container.swal2-toast-shown {
+  background-color: transparent !important;
+}
+
+/* تخصيص مظهر الإشعارات العادية */
+.swal2-popup .swal2-title {
+  font-weight: 700;
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center !important;
+}
+
+.swal2-popup .swal2-html-container {
+  font-weight: 400;
+  color: #555;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-align: center !important;
+}
+
+.swal2-popup .swal2-confirm {
+  font-weight: 600 !important;
+  border-radius: 50px !important;
+  padding: 0.6rem 1.8rem !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.swal2-popup .swal2-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15) !important;
+}
+
+.swal2-popup .swal2-cancel {
+  font-weight: 600 !important;
+  border-radius: 50px !important;
+  padding: 0.6rem 1.8rem !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.swal2-popup .swal2-cancel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* تخصيص أيقونات الإشعارات */
+.swal2-popup .swal2-icon {
+  margin: 1.5rem auto 0.5rem;
+  border-width: 3px;
+}
+
+.swal2-popup .swal2-icon.swal2-success {
+  border-color: #28a745;
+}
+
+.swal2-popup .swal2-icon.swal2-success .swal2-success-line-tip,
+.swal2-popup .swal2-icon.swal2-success .swal2-success-line-long {
+  background-color: #28a745;
+}
+
+.swal2-popup .swal2-icon.swal2-success .swal2-success-ring {
+  border-color: rgba(40, 167, 69, 0.3);
+}
+
+.swal2-popup .swal2-icon.swal2-error {
+  border-color: #dc3545;
+}
+
+.swal2-popup .swal2-icon.swal2-error .swal2-x-mark-line-left,
+.swal2-popup .swal2-icon.swal2-error .swal2-x-mark-line-right {
+  background-color: #dc3545;
+}
+
+.swal2-popup .swal2-icon.swal2-warning {
+  border-color: #ffc107;
+  color: #ffc107;
+}
+
+.swal2-popup .swal2-icon.swal2-info {
+  border-color: #17a2b8;
+  color: #17a2b8;
+}
+
+.swal2-popup .swal2-icon.swal2-question {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+/* تخصيص شريط التقدم */
+.swal2-popup .swal2-timer-progress-bar {
+  background: rgba(40, 167, 69, 0.5);
+}
+
+/* تخصيص مربع الإدخال */
+.swal2-popup .swal2-input {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.swal2-popup .swal2-input:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* تخصيص مظهر الإشعارات حسب النوع */
+.swal2-popup.swal2-toast.swal2-icon-success {
+  border-right: 4px solid #28a745;
+  background: linear-gradient(to right, rgba(40, 167, 69, 0.05), #ffffff);
+}
+
+.swal2-popup.swal2-toast.swal2-icon-error {
+  border-right: 4px solid #dc3545;
+  background: linear-gradient(to right, rgba(220, 53, 69, 0.05), #ffffff);
+}
+
+.swal2-popup.swal2-toast.swal2-icon-warning {
+  border-right: 4px solid #ffc107;
+  background: linear-gradient(to right, rgba(255, 193, 7, 0.05), #ffffff);
+}
+
+.swal2-popup.swal2-toast.swal2-icon-info {
+  border-right: 4px solid #17a2b8;
+  background: linear-gradient(to right, rgba(23, 162, 184, 0.05), #ffffff);
+}
+
+/* تخصيص الإشعارات للاتجاه RTL */
+html[dir="rtl"] .swal2-popup.swal2-toast.swal2-icon-success,
+html[dir="rtl"] .swal2-popup.swal2-toast.swal2-icon-error,
+html[dir="rtl"] .swal2-popup.swal2-toast.swal2-icon-warning,
+html[dir="rtl"] .swal2-popup.swal2-toast.swal2-icon-info {
+  border-right: none;
+  border-left: 4px solid;
+}
+
+html[dir="rtl"] .swal2-popup.swal2-toast.swal2-icon-success {
+  border-left-color: #28a745;
+  background: linear-gradient(to left, rgba(40, 167, 69, 0.05), #ffffff);
+}
+
+html[dir="rtl"] .swal2-popup.swal2-toast.swal2-icon-error {
+  border-left-color: #dc3545;
+  background: linear-gradient(to left, rgba(220, 53, 69, 0.05), #ffffff);
+}
+
+html[dir="rtl"] .swal2-popup.swal2-toast.swal2-icon-warning {
+  border-left-color: #ffc107;
+  background: linear-gradient(to left, rgba(255, 193, 7, 0.05), #ffffff);
+}
+
+html[dir="rtl"] .swal2-popup.swal2-toast.swal2-icon-info {
+  border-left-color: #17a2b8;
+  background: linear-gradient(to left, rgba(23, 162, 184, 0.05), #ffffff);
+}
+
+/* زر إغلاق التوستر */
+.swal2-popup.swal2-toast .swal2-close {
+  align-self: center;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  font-size: 1.5em;
+  opacity: 0.5;
+  transition: all 0.2s ease;
+}
+
+.swal2-popup.swal2-toast .swal2-close:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* تأثير ظهور واختفاء التوستر */
+.swal2-popup.swal2-toast.swal2-hide {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* تأثيرات حركية للإشعارات */
+.swal2-popup {
+  animation: zoomIn 0.3s ease forwards;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* تخصيص أزرار الإشعارات حسب النوع */
+.swal2-popup .swal2-confirm.swal2-styled.swal2-default-outline {
+  background-color: #3085d6;
+  color: #fff;
+}
+
+/* نجاح */
+.swal2-icon-success .swal2-confirm.swal2-styled {
+  background-color: #28a745 !important;
+}
+
+/* خطأ */
+.swal2-icon-error .swal2-confirm.swal2-styled {
+  background-color: #dc3545 !important;
+}
+
+/* تحذير */
+.swal2-icon-warning .swal2-confirm.swal2-styled {
+  background-color: #ffc107 !important;
+  color: #333 !important;
+}
+
+/* معلومات */
+.swal2-icon-info .swal2-confirm.swal2-styled {
+  background-color: #17a2b8 !important;
+}
+
+/* تخصيص للاتجاه من اليمين إلى اليسار */
+html[dir="rtl"] .swal2-popup {
+  text-align: center !important;
+}
+
+html[dir="rtl"] .swal2-popup .swal2-title {
+  text-align: center !important;
+}
+
+html[dir="rtl"] .swal2-popup .swal2-html-container {
+  text-align: center !important;
+}
+
+/* تخصيص زر الإغلاق */
+.swal2-popup .swal2-close {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: auto;
+  font-size: 1.5rem;
+  color: #aaa;
+  transition: all 0.3s ease;
+}
+
+html[dir="rtl"] .swal2-popup .swal2-close {
+  left: auto;
+  right: 10px;
+}
+
+.swal2-popup .swal2-close:hover {
+  color: #555;
+  transform: rotate(90deg);
+}
+
+/* تنسيق شريط التقدم الزمني */
+.swal2-timer-progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.swal2-timer-progress-bar {
+  height: 4px;
+  background-color: rgba(40, 167, 69, 0.5);
+}
+
+/* تنسيق النص في الإشعارات */
+.swal2-popup .swal2-content,
+.swal2-popup .swal2-html-container,
+.swal2-popup .swal2-title,
+.swal2-popup .swal2-text {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* تنسيق أزرار الإشعارات */
+.swal2-actions {
+  justify-content: center !important;
+  margin-top: 1rem !important;
+} 

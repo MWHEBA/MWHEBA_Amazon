@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}نظام مزامنة FBM{% endblock %}</title>
+    <!-- Bootstrap RTL CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/notifications.css">
+    {% block extra_css %}{% endblock %}
+    <style>
+        /* تنسيقات الهيدر المحسنة */
+        .navbar-custom {
+            background: linear-gradient(135deg, #0d6efd, #0747a6);
+            padding: 0.8rem 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand i {
+            font-size: 1.8rem;
+            margin-left: 0.7rem;
+            color: #ffffff;
+        }
+        
+        .navbar-nav {
+            margin-right: 2rem;
+        }
+        
+        .navbar-nav .nav-link {
+            padding: 0.7rem 1.2rem;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+            margin: 0 0.2rem;
+        }
+        
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 5px;
+        }
+        
+        .navbar-nav .nav-link.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background-color: #ffffff;
+            border-radius: 3px;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.6rem 1rem;
+            font-weight: 500;
+            border-radius: 5px;
+            margin-bottom: 0.2rem;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+        
+        .dropdown-item i {
+            margin-left: 0.5rem;
+            color: #0d6efd;
+        }
+        
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        
+        .auth-buttons .btn {
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        
+        .auth-buttons .btn-light {
+            background: #ffffff;
+            color: #0d6efd;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-buttons .btn-outline-light {
+            border: 2px solid #ffffff;
+        }
+        
+        .auth-buttons .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .navbar-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        
+        /* تحسينات التوافق مع الأجهزة المحمولة */
+        @media (max-width: 992px) {
+            .navbar-nav {
+                padding: 1rem 0;
+                margin-right: 0;
+            }
+            
+            .navbar-nav .nav-link {
+                padding: 0.7rem 0;
+                margin: 0.2rem 0;
+            }
+            
+            .auth-buttons {
+                margin-top: 1rem;
+                display: flex;
+                justify-content: center;
+            }
+        }
+        
+        /* تحسينات إضافية للتذييل */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content-wrapper {
+            flex: 1 0 auto;
+            min-height: calc(100vh - 160px); /* ارتفاع الصفحة ناقص ارتفاع الهيدر والفوتر */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+        
+        .footer {
+            flex-shrink: 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer .text-muted {
+            color: #6c757d;
+        }
+        
+        .footer a {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">
+                <i class="fas fa-box-open"></i>
+                <span>نظام مزامنة FBM</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            {% if user.is_authenticated %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" href="{% url 'dashboard' %}">
+                            <i class="fas fa-tachometer-alt me-1"></i> لوحة التحكم
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/inventory/products/' in request.path %}active{% endif %}" href="{% url 'product_list' %}">
+                            <i class="fas fa-cubes me-1"></i> المنتجات
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fab fa-amazon me-1"></i> تكامل أمازون
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'import_products' %}">
+                                    <i class="fas fa-file-import me-1"></i> استيراد المنتجات
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'sync_all_products' %}">
+                                    <i class="fas fa-sync me-1"></i> مزامنة المخزون
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'test_amazon_connection' %}">
+                                    <i class="fas fa-plug me-1"></i> اختبار الاتصال
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'amazon_settings' %}">
+                                    <i class="fas fa-cog me-1"></i> إعدادات الاتصال
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="d-flex auth-buttons">
+                    <span class="navbar-text me-3">
+                        <i class="fas fa-user me-1"></i> {{ user.username }}
+                    </span>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">
+                        <i class="fas fa-sign-out-alt me-1"></i> تسجيل الخروج
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Django Messages Container (سيتم معالجتها بواسطة JavaScript) -->
+    {% if messages %}
+    <div class="django-messages" style="display: none;">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags|cut:'error'|cut:'danger' }}{% if 'error' in message.tags %}alert-danger{% endif %}{% else %}alert-info{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Main Content -->
+        <div class="container main-content mt-4">
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container text-center">
+                <span class="text-muted">
+                    &copy; {% now "Y" %} نظام مزامنة FBM | تم تطويره بواسطة <a href="#" class="fw-bold">MWHEBA Agency</a> لبائعي أمازون في مصر
+                </span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- jQuery (يجب تحميله أولاً) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Notifications JS (يجب تحميله بعد SweetAlert2) -->
+    <script src="/static/js/notifications.js"></script>
+    
+    <!-- Custom JS (يجب تحميله بعد notifications.js) -->
+    <script src="/static/js/main.js"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

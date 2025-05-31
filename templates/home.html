@@ -1,0 +1,390 @@
+{% extends "base_public.html" %}
+{% load static %}
+
+{% block title %}نظام مزامنة FBM - الصفحة الرئيسية{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<!-- قسم الهيرو -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="fade-in">نظام مزامنة المخزون مع أمازون FBM</h1>
+                <p class="fade-in">منصة متكاملة لإدارة المخزون ومزامنته مع حساب البائع على أمازون بشكل آلي وسهل، مع تقارير متقدمة وتنبيهات فورية.</p>
+                <div class="d-flex gap-3 fade-in">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-light btn-hero">
+                            <i class="fas fa-tachometer-alt me-2"></i> لوحة التحكم
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-light btn-hero">
+                            <i class="fas fa-sign-in-alt me-2"></i> تسجيل الدخول
+                        </a>
+                    {% endif %}
+                    <a href="#features" class="btn btn-outline-light btn-hero">
+                        <i class="fas fa-info-circle me-2"></i> تعرف على المميزات
+                    </a>
+                </div>
+                
+                <!-- شريط الإحصائيات -->
+                <div class="stats-bar fade-in">
+                    <div class="row">
+                        <div class="col-4 stats-item">
+                            <div class="stats-value">+500</div>
+                            <div class="stats-label">عميل نشط</div>
+                        </div>
+                        <div class="col-4 stats-item">
+                            <div class="stats-value">+10K</div>
+                            <div class="stats-label">منتج متزامن</div>
+                        </div>
+                        <div class="col-4 stats-item">
+                            <div class="stats-value">99.9%</div>
+                            <div class="stats-label">دقة المزامنة</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0 text-center">
+                <img src="https://via.placeholder.com/600x400/0d6efd/ffffff?text=نظام+مزامنة+FBM" alt="نظام مزامنة FBM" class="hero-image float-animation">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- قسم المميزات -->
+<section id="features" class="features-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="fade-in">مميزات النظام</h2>
+            <p class="fade-in">نظام متكامل يوفر لك كل ما تحتاجه لإدارة مخزونك ومزامنته مع أمازون بكفاءة عالية</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <h3>إدارة المخزون</h3>
+                    <p>إدارة كاملة للمخزون مع تتبع الكميات والمنتجات بشكل دقيق وفعال، مع إمكانية إضافة وتعديل المنتجات بسهولة.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center fade-in">
+                    <i class="fab fa-amazon feature-icon"></i>
+                    <h3>تكامل مع أمازون</h3>
+                    <p>تكامل سلس مع Amazon SP-API لإدارة منتجاتك على منصة أمازون، مع دعم كامل لجميع وظائف API.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center fade-in">
+                    <i class="fas fa-sync feature-icon"></i>
+                    <h3>مزامنة تلقائية</h3>
+                    <p>مزامنة تلقائية للمخزون بين نظامك وحساب البائع على أمازون، مع إمكانية جدولة المزامنة حسب احتياجاتك.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center fade-in">
+                    <i class="fas fa-chart-line feature-icon"></i>
+                    <h3>تقارير وإحصائيات</h3>
+                    <p>تقارير مفصلة وإحصائيات دقيقة لمساعدتك في اتخاذ القرارات المناسبة، مع إمكانية تصدير التقارير بعدة صيغ.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center fade-in">
+                    <i class="fas fa-bell feature-icon"></i>
+                    <h3>تنبيهات آلية</h3>
+                    <p>تنبيهات آلية عند انخفاض المخزون أو حدوث مشكلات في المزامنة، مع إمكانية تخصيص التنبيهات حسب احتياجاتك.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center fade-in">
+                    <i class="fas fa-lock feature-icon"></i>
+                    <h3>أمان وخصوصية</h3>
+                    <p>حماية كاملة لبياناتك وخصوصيتها مع أعلى معايير الأمان، مع تشفير البيانات وتأمين الاتصالات.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- قسم لقطات النظام -->
+<section id="screenshots" class="screenshots-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="fade-in">لقطات من النظام</h2>
+            <p class="fade-in">تعرف على واجهة النظام السهلة والمرنة التي تمكنك من إدارة مخزونك بكفاءة</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="screenshot-item fade-in">
+                    <img src="https://via.placeholder.com/600x400/0d6efd/ffffff?text=لوحة+التحكم" alt="لوحة التحكم">
+                    <div class="screenshot-caption">
+                        <h4>لوحة التحكم</h4>
+                        <p>نظرة عامة على حالة المخزون والمبيعات والمزامنة</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="screenshot-item fade-in">
+                    <img src="https://via.placeholder.com/600x400/198754/ffffff?text=إدارة+المنتجات" alt="إدارة المنتجات">
+                    <div class="screenshot-caption">
+                        <h4>إدارة المنتجات</h4>
+                        <p>واجهة سهلة لإدارة المنتجات وتحديث المخزون</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="screenshot-item fade-in">
+                    <img src="https://via.placeholder.com/600x400/6f42c1/ffffff?text=تقارير+المزامنة" alt="تقارير المزامنة">
+                    <div class="screenshot-caption">
+                        <h4>تقارير المزامنة</h4>
+                        <p>تقارير مفصلة عن عمليات المزامنة وحالة المنتجات</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- قسم الشهادات -->
+<section id="testimonials" class="testimonials-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="fade-in">آراء العملاء</h2>
+            <p class="fade-in">تعرف على تجارب عملائنا مع نظام مزامنة FBM</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://via.placeholder.com/60x60/0d6efd/ffffff?text=أ.م" alt="أحمد محمد">
+                        </div>
+                        <div class="testimonial-meta">
+                            <h4>أحمد محمد</h4>
+                            <p>بائع على أمازون</p>
+                            <div class="testimonial-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <p>"نظام مزامنة FBM غير طريقة إدارتي للمخزون بشكل كامل. أصبحت المزامنة مع أمازون سهلة وسريعة، ووفر لي الكثير من الوقت والجهد."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://via.placeholder.com/60x60/198754/ffffff?text=س.أ" alt="سارة أحمد">
+                        </div>
+                        <div class="testimonial-meta">
+                            <h4>سارة أحمد</h4>
+                            <p>مديرة مخزون</p>
+                            <div class="testimonial-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <p>"التقارير والإحصائيات التي يوفرها النظام ساعدتني كثيراً في اتخاذ قرارات أفضل بخصوص المخزون. نظام سهل الاستخدام ودقيق جداً."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://via.placeholder.com/60x60/6f42c1/ffffff?text=م.ع" alt="محمد علي">
+                        </div>
+                        <div class="testimonial-meta">
+                            <h4>محمد علي</h4>
+                            <p>صاحب متجر إلكتروني</p>
+                            <div class="testimonial-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <p>"بعد استخدام نظام مزامنة FBM، لم أعد أواجه مشكلات في إدارة المخزون على أمازون. النظام سهل الاستخدام والدعم الفني ممتاز."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- قسم الأسئلة الشائعة -->
+<section id="faq" class="faq-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="fade-in">الأسئلة الشائعة</h2>
+            <p class="fade-in">إجابات على أكثر الأسئلة شيوعاً حول نظام مزامنة FBM</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item fade-in">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                كيف يعمل نظام مزامنة FBM؟
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                يعمل النظام من خلال الاتصال بـ Amazon SP-API لمزامنة معلومات المخزون بين قاعدة البيانات الخاصة بك وحساب البائع على أمازون. يمكنك تحديث المخزون في النظام وسيتم مزامنته تلقائياً مع أمازون، كما يمكنك استيراد المنتجات من أمازون إلى النظام.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item fade-in">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                هل يمكنني تخصيص النظام حسب احتياجاتي؟
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                نعم، يمكن تخصيص النظام حسب احتياجاتك الخاصة. يمكنك تخصيص التقارير والتنبيهات وجدولة المزامنة وغيرها من الإعدادات. كما يمكننا تطوير ميزات إضافية حسب متطلباتك الخاصة.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item fade-in">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                ما هي متطلبات استخدام النظام؟
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                تحتاج إلى حساب بائع نشط على أمازون وبيانات اعتماد Amazon SP-API (مثل مفاتيح الوصول وعلامات التحديث). سنساعدك في إعداد وتكوين هذه البيانات خلال عملية التسجيل.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item fade-in">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                هل النظام آمن لاستخدام بيانات حسابي على أمازون؟
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                نعم، نحن نأخذ أمان بياناتك بجدية تامة. يتم تشفير جميع بيانات الاعتماد وتخزينها بشكل آمن. نستخدم اتصالات مشفرة (HTTPS) ونتبع أفضل ممارسات الأمان لحماية بياناتك.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- قسم الاتصال -->
+<section class="cta-section">
+    <div class="container">
+        <h2 class="fade-in">ابدأ استخدام نظام مزامنة FBM اليوم</h2>
+        <p class="fade-in">انضم إلى مئات البائعين الذين يستخدمون نظامنا لإدارة مخزونهم على أمازون بكفاءة. وفر وقتك وجهدك وركز على تنمية أعمالك.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="btn btn-cta fade-in">
+                <i class="fas fa-tachometer-alt me-2"></i> الذهاب إلى لوحة التحكم
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-cta fade-in">
+                <i class="fas fa-sign-in-alt me-2"></i> تسجيل الدخول الآن
+            </a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- تذييل الصفحة الرئيسية -->
+<footer class="footer-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <div class="footer-links">
+                    <h5>نظام مزامنة FBM</h5>
+                    <p>منصة متكاملة لإدارة المخزون ومزامنته مع حساب البائع على أمازون بشكل آلي وسهل.</p>
+                    <div class="social-links mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 mb-4 mb-md-0">
+                <div class="footer-links">
+                    <h5>روابط سريعة</h5>
+                    <ul>
+                        <li><a href="{% url 'dashboard' %}">لوحة التحكم</a></li>
+                        <li><a href="{% url 'product_list' %}">المنتجات</a></li>
+                        <li><a href="{% url 'import_products' %}">استيراد المنتجات</a></li>
+                        <li><a href="{% url 'sync_all_products' %}">مزامنة المخزون</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4 mb-md-0">
+                <div class="footer-links">
+                    <h5>المساعدة والدعم</h5>
+                    <ul>
+                        <li><a href="{% url 'terms' %}">الشروط والأحكام</a></li>
+                        <li><a href="{% url 'privacy' %}">سياسة الخصوصية</a></li>
+                        <li><a href="#faq">الأسئلة الشائعة</a></li>
+                        <li><a href="#">اتصل بنا</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="footer-links">
+                    <h5>تواصل معنا</h5>
+                    <ul>
+                        <li><i class="fas fa-envelope me-2"></i> info@mwheba.com</li>
+                        <li><i class="fas fa-phone me-2"></i> +20 123 456 7890</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> القاهرة، مصر</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} نظام مزامنة FBM | تم تطويره بواسطة <a href="#" class="fw-bold">MWHEBA Agency</a> لبائعي أمازون في مصر</p>
+        </div>
+    </div>
+</footer>
+{% endblock %} 

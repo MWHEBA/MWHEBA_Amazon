@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}قائمة المنتجات | نظام مزامنة FBM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">لوحة التحكم</a></li>
+                <li class="breadcrumb-item active">المنتجات</li>
+            </ol>
+        </nav>
+        <h1 class="display-6 mb-3">
+            <i class="fas fa-cubes me-2 text-primary"></i>
+            قائمة المنتجات
+        </h1>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'add_product' %}" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i> إضافة منتج جديد
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    جميع المنتجات
+                </h5>
+            </div>
+            <div class="col-auto">
+                <span class="badge bg-primary">{{ products.count }} منتج</span>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if products %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>المنتج</th>
+                        <th>رمز المنتج المحلي</th>
+                        <th>رمز المنتج على أمازون</th>
+                        <th>الكمية</th>
+                        <th>FBM</th>
+                        <th>آخر تحديث</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <a href="{% url 'product_detail' product.id %}">{{ product.title }}</a>
+                        </td>
+                        <td>{{ product.local_sku }}</td>
+                        <td>{{ product.amazon_sku }}</td>
+                        <td id="product-quantity-{{ product.id }}">
+                            {% if product.quantity <= 0 %}
+                                <span class="badge bg-danger">نفد من المخزون</span>
+                            {% elif product.quantity <= 5 %}
+                                <span class="badge bg-warning text-dark">{{ product.quantity }}</span>
+                            {% else %}
+                                <span class="badge bg-success">{{ product.quantity }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if product.is_fbm %}
+                                <span class="badge bg-primary"><i class="fab fa-amazon me-1"></i> FBM</span>
+                            {% else %}
+                                <span class="badge bg-secondary">غير FBM</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ product.updated_at|date:"d/m/Y" }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'product_detail' product.id %}" class="btn btn-info" data-bs-toggle="tooltip" title="عرض التفاصيل">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'edit_product' product.id %}" class="btn btn-warning" data-bs-toggle="tooltip" title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn btn-success sale-button" data-product-id="{{ product.id }}" data-product-name="{{ product.title }}" data-bs-toggle="tooltip" title="تسجيل بيع">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                                {% if product.is_fbm %}
+                                <a href="{% url 'sync_product' product.id %}" class="btn btn-primary" data-bs-toggle="tooltip" title="مزامنة مع أمازون">
+                                    <i class="fas fa-sync"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            لا توجد منتجات مضافة بعد. <a href="{% url 'add_product' %}">أضف منتجًا جديدًا</a> أو <a href="{% url 'import_products' %}">استورد من أمازون</a>.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // يتم تنفيذ هذا الكود بعد تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+        // تفعيل tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %} 

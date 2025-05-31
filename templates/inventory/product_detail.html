@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.title }} | نظام مزامنة FBM{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">لوحة التحكم</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product_list' %}">المنتجات</a></li>
+                <li class="breadcrumb-item active">{{ product.title }}</li>
+            </ol>
+        </nav>
+        <h1 class="display-6 mb-3">
+            {{ product.title }}
+            {% if product.is_fbm %}
+                <span class="badge bg-primary"><i class="fab fa-amazon me-1"></i> FBM</span>
+            {% endif %}
+        </h1>
+    </div>
+    <div class="col-auto">
+        <div class="btn-group">
+            <a href="{% url 'edit_product' product.id %}" class="btn btn-warning">
+                <i class="fas fa-edit me-1"></i> تعديل المنتج
+            </a>
+            {% if product.is_fbm %}
+            <a href="{% url 'sync_product' product.id %}" class="btn btn-primary">
+                <i class="fas fa-sync me-1"></i> مزامنة مع أمازون
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- تفاصيل المنتج -->
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    تفاصيل المنتج
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th style="width: 40%">عنوان المنتج</th>
+                            <td>{{ product.title }}</td>
+                        </tr>
+                        <tr>
+                            <th>رمز المنتج المحلي</th>
+                            <td>{{ product.local_sku }}</td>
+                        </tr>
+                        <tr>
+                            <th>رمز المنتج على أمازون</th>
+                            <td>{{ product.amazon_sku }}</td>
+                        </tr>
+                        <tr>
+                            <th>الكمية الحالية</th>
+                            <td>
+                                {% if product.quantity <= 0 %}
+                                    <span class="badge bg-danger">نفد من المخزون</span>
+                                {% elif product.quantity <= 5 %}
+                                    <span class="badge bg-warning text-dark">{{ product.quantity }}</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{ product.quantity }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>نوع المنتج</th>
+                            <td>
+                                {% if product.is_fbm %}
+                                    <span class="badge bg-primary"><i class="fab fa-amazon me-1"></i> FBM</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">غير FBM</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>تاريخ الإضافة</th>
+                            <td>{{ product.created_at|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <th>آخر تحديث</th>
+                            <td>{{ product.updated_at|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- إضافة حركة مخزون -->
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-exchange-alt me-2"></i>
+                    تسجيل حركة مخزون
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.movement_type.id_for_label }}" class="form-label">نوع الحركة</label>
+                        {{ form.movement_type }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.quantity.id_for_label }}" class="form-label">الكمية</label>
+                        {{ form.quantity }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.notes.id_for_label }}" class="form-label">ملاحظات</label>
+                        {{ form.notes }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> تسجيل الحركة
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- حركات المخزون السابقة -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-history me-2"></i>
+            سجل حركات المخزون
+        </h5>
+    </div>
+    <div class="card-body">
+        {% if stock_movements %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>نوع الحركة</th>
+                        <th>الكمية</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for movement in stock_movements %}
+                    <tr>
+                        <td>{{ movement.timestamp|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if movement.movement_type == 'SALE' %}
+                                <span class="badge bg-danger">{{ movement.get_movement_type_display }}</span>
+                            {% else %}
+                                <span class="badge bg-success">{{ movement.get_movement_type_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ movement.quantity }}</td>
+                        <td>{{ movement.notes|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            لا توجد حركات مخزون مسجلة لهذا المنتج.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

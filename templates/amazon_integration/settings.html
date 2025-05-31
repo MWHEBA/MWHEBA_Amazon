@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .amazon-settings-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .amazon-settings-header {
+        background: linear-gradient(135deg, #232f3e, #131921);
+        color: white;
+        padding: 1.2rem;
+        position: relative;
+    }
+    
+    .amazon-settings-header h5 {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+    
+    .amazon-settings-header h5 i {
+        margin-left: 10px;
+        font-size: 1.2rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.8rem;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #232f3e;
+    }
+    
+    .form-text {
+        margin-top: 0.4rem;
+        font-size: 0.85rem;
+    }
+    
+    .save-btn {
+        background: linear-gradient(135deg, #ff9900, #e47911);
+        border: none;
+        font-weight: 600;
+        padding: 0.8rem 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    .save-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(228, 121, 17, 0.3);
+    }
+    
+    .save-btn:active {
+        transform: translateY(0);
+    }
+    
+    .card-footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #eee;
+    }
+    
+    .test-btn {
+        border: 1px solid #232f3e;
+        color: #232f3e;
+        transition: all 0.3s ease;
+    }
+    
+    .test-btn:hover {
+        background-color: #232f3e;
+        color: white;
+    }
+    
+    /* تنسيق الحقول للاتجاه من اليسار إلى اليمين */
+    .ltr-input {
+        text-align: left;
+        direction: ltr;
+    }
+    
+    /* تحسين مظهر الحقول */
+    .form-control {
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        transition: all 0.3s ease;
+        text-align: left;
+        direction: ltr;
+        height: 46px;
+        font-family: monospace;
+        font-size: 14px;
+    }
+    
+    .form-control:focus {
+        border-color: #ff9900;
+        box-shadow: 0 0 0 0.25rem rgba(255, 153, 0, 0.25);
+    }
+    
+    /* توحيد ارتفاع الحقول */
+    .form-control, .input-group {
+        height: 46px;
+    }
+    
+    /* تحسين مظهر البطاقة الرئيسية */
+    .info-alert {
+        background-color: rgba(23, 162, 184, 0.1);
+        border: none;
+        border-left: 4px solid #17a2b8;
+        border-radius: 0 5px 5px 0;
+    }
+    
+    /* تنسيق الحقول المخفية (كلمات المرور) */
+    input[type="password"] {
+        letter-spacing: normal;
+        font-family: monospace;
+        font-size: 14px;
+    }
+    
+    /* إضافة تنسيق موحد لجميع الحقول */
+    input.form-control[type="password"] {
+        background-color: #f8f9fa;
+    }
+    
+    input.form-control[type="text"] {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="card amazon-settings-card">
+                <div class="amazon-settings-header">
+                    <h5 class="mb-0">
+                        <i class="fab fa-amazon"></i>
+                        إعدادات الاتصال بـ Amazon SP-API
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert info-alert mb-4">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-info-circle fa-2x"></i>
+                            </div>
+                            <div>
+                                <h6 class="alert-heading mb-1">معلومات هامة</h6>
+                                <p class="mb-0">قم بإدخال بيانات اعتماد Amazon SP-API الخاصة بك. يمكنك الحصول على هذه البيانات من حساب Amazon Seller Central.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <!-- AWS Access Key -->
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.aws_access_key.id_for_label }}" class="form-label">AWS Access Key</label>
+                                    {{ form.aws_access_key }}
+                                    <div class="form-text text-muted">مفتاح الوصول لحساب AWS الخاص بك (حوالي 20 حرفًا)</div>
+                                    {% if form.aws_access_key.errors %}
+                                        <div class="text-danger mt-1">{{ form.aws_access_key.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- AWS Secret Key -->
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.aws_secret_key.id_for_label }}" class="form-label">AWS Secret Key</label>
+                                    <input type="text" name="aws_secret_key" value="{{ form.aws_secret_key.value|default:'' }}" class="form-control" id="{{ form.aws_secret_key.id_for_label }}" placeholder="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" autocomplete="off">
+                                    <div class="form-text text-muted">المفتاح السري لحساب AWS (حوالي 40 حرفًا)</div>
+                                    {% if form.aws_secret_key.errors %}
+                                        <div class="text-danger mt-1">{{ form.aws_secret_key.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- LWA Client ID -->
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.lwa_client_id.id_for_label }}" class="form-label">LWA Client ID</label>
+                                    {{ form.lwa_client_id }}
+                                    <div class="form-text text-muted">معرف تطبيق Login with Amazon</div>
+                                    {% if form.lwa_client_id.errors %}
+                                        <div class="text-danger mt-1">{{ form.lwa_client_id.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- LWA Client Secret -->
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.lwa_client_secret.id_for_label }}" class="form-label">LWA Client Secret</label>
+                                    <input type="text" name="lwa_client_secret" value="{{ form.lwa_client_secret.value|default:'' }}" class="form-control" id="{{ form.lwa_client_secret.id_for_label }}" placeholder="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" autocomplete="off">
+                                    <div class="form-text text-muted">المفتاح السري للتطبيق (حوالي 40 حرفًا)</div>
+                                    {% if form.lwa_client_secret.errors %}
+                                        <div class="text-danger mt-1">{{ form.lwa_client_secret.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Refresh Token -->
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.refresh_token.id_for_label }}" class="form-label">Refresh Token</label>
+                                    <input type="text" name="refresh_token" value="{{ form.refresh_token.value|default:'' }}" class="form-control" id="{{ form.refresh_token.id_for_label }}" placeholder="Atzr|IwEBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+                                    <div class="form-text text-muted">رمز التحديث (يبدأ بـ Atzr|IwEB)</div>
+                                    {% if form.refresh_token.errors %}
+                                        <div class="text-danger mt-1">{{ form.refresh_token.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Role ARN -->
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.role_arn.id_for_label }}" class="form-label">Role ARN</label>
+                                    {{ form.role_arn }}
+                                    <div class="form-text text-muted">معرف الدور (يبدأ بـ arn:aws:iam::)</div>
+                                    {% if form.role_arn.errors %}
+                                        <div class="text-danger mt-1">{{ form.role_arn.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg save-btn">
+                                <i class="fas fa-save me-2"></i> حفظ الإعدادات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center py-3">
+                    <small class="text-muted">آخر تحديث: {{ form.instance.updated_at|date:"d/m/Y H:i" }}</small>
+                    <a href="{% url 'test_amazon_connection' %}" class="btn btn-outline-primary btn-sm test-btn">
+                        <i class="fas fa-plug me-1"></i> اختبار الاتصال
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

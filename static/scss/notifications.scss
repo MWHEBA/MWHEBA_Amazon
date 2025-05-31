@@ -1,0 +1,164 @@
+/**
+ * تخصيص مظهر الإشعارات
+ */
+
+// متغيرات الألوان
+$success-color: #28a745;
+$error-color: #dc3545;
+$warning-color: #ffc107;
+$info-color: #17a2b8;
+
+// تخصيص مظهر SweetAlert2
+.swal2-popup {
+  font-family: 'Cairo', sans-serif;
+  border-radius: 10px;
+  
+  &.swal2-toast {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    
+    .swal2-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    
+    .swal2-timer-progress-bar {
+      background: rgba($success-color, 0.5);
+    }
+  }
+  
+  .swal2-title {
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .swal2-content {
+    font-weight: 400;
+    color: #555;
+  }
+  
+  .swal2-confirm {
+    font-weight: 600 !important;
+    border-radius: 50px !important;
+    padding: 0.6rem 1.8rem !important;
+    transition: all 0.3s ease !important;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .swal2-cancel {
+    font-weight: 600 !important;
+    border-radius: 50px !important;
+    padding: 0.6rem 1.8rem !important;
+    transition: all 0.3s ease !important;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  // تخصيص أيقونات الإشعارات
+  .swal2-icon {
+    &.swal2-success {
+      border-color: $success-color;
+      
+      .swal2-success-line-tip,
+      .swal2-success-line-long {
+        background-color: $success-color;
+      }
+      
+      .swal2-success-ring {
+        border-color: rgba($success-color, 0.3);
+      }
+    }
+    
+    &.swal2-error {
+      border-color: $error-color;
+      
+      .swal2-x-mark-line-left,
+      .swal2-x-mark-line-right {
+        background-color: $error-color;
+      }
+    }
+    
+    &.swal2-warning {
+      border-color: $warning-color;
+      color: $warning-color;
+    }
+    
+    &.swal2-info {
+      border-color: $info-color;
+      color: $info-color;
+    }
+    
+    &.swal2-question {
+      border-color: #6c757d;
+      color: #6c757d;
+    }
+  }
+  
+  // تخصيص شريط التقدم
+  .swal2-timer-progress-bar {
+    background: rgba($success-color, 0.5);
+  }
+  
+  // تخصيص مربع الإدخال
+  .swal2-input {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    
+    &:focus {
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+}
+
+// تخصيص مظهر الإشعارات حسب النوع
+.swal2-popup {
+  &.swal2-toast {
+    &.swal2-icon-success {
+      background: rgba($success-color, 0.1);
+      border-right: 4px solid $success-color;
+    }
+    
+    &.swal2-icon-error {
+      background: rgba($error-color, 0.1);
+      border-right: 4px solid $error-color;
+    }
+    
+    &.swal2-icon-warning {
+      background: rgba($warning-color, 0.1);
+      border-right: 4px solid $warning-color;
+    }
+    
+    &.swal2-icon-info {
+      background: rgba($info-color, 0.1);
+      border-right: 4px solid $info-color;
+    }
+  }
+}
+
+// تخصيص الإشعارات للاتجاه RTL
+html[dir="rtl"] {
+  .swal2-popup {
+    &.swal2-toast {
+      &.swal2-icon-success,
+      &.swal2-icon-error,
+      &.swal2-icon-warning,
+      &.swal2-icon-info {
+        border-right: none;
+        border-left: 4px solid;
+      }
+    }
+  }
+} 
