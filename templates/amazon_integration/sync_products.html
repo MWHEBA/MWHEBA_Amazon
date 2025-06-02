@@ -1,101 +1,123 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}مزامنة المنتجات مع أمازون | نظام مزامنة FBM{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">لوحة التحكم</a></li>
-                <li class="breadcrumb-item active">مزامنة المنتجات مع أمازون</li>
-            </ol>
-        </nav>
-        <h1 class="display-6 mb-3">
-            <i class="fas fa-sync me-2 text-primary"></i>
-            مزامنة المنتجات مع أمازون
-        </h1>
-    </div>
-</div>
-
-<div class="row mb-4">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fab fa-amazon me-2"></i>
-                    مزامنة كميات المنتجات مع أمازون
-                </h5>
+<div class="container py-4">
+    <h1 class="mb-4">{{ title }}</h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="card-body">
-                <p class="mb-4">
-                    هذه الأداة تقوم بمزامنة كميات المنتجات في النظام مع حساب أمازون الخاص بك.
-                    سيتم تحديث كميات جميع منتجات FBM على أمازون لتتطابق مع الكميات في النظام.
-                </p>
-                
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="mb-4">
-                        <div class="d-flex align-items-center text-warning">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <span>تأكد من إعداد بيانات اعتماد Amazon SP-API بشكل صحيح في ملف <code>.env</code> قبل استخدام هذه الميزة.</span>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">مزامنة المنتجات مع أمازون</h5>
+        </div>
+        <div class="card-body">
+            {% if has_active_settings %}
+                {% if not has_location_id %}
+                    <div class="alert alert-warning">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            </div>
+                            <div>
+                                <h6 class="alert-heading mb-1">مطلوب رقم موقع FBM</h6>
+                                <p class="mb-0">
+                                    لا يمكن مزامنة المنتجات بدون رقم موقع FBM. يرجى إضافة رقم الموقع في إعدادات أمازون.
+                                    <a href="{% url 'amazon_settings' %}" class="alert-link">إضافة رقم موقع FBM</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100 bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">إحصائيات المنتجات</h6>
+                                    <div class="mt-3">
+                                        <p class="mb-2">
+                                            <strong>عدد منتجات FBM:</strong> 
+                                            <span class="badge bg-info">{{ fbm_products_count }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post" id="syncForm">
+                        {% csrf_token %}
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary" id="syncButton">
+                                    <i class="fas fa-sync me-2"></i> مزامنة المنتجات
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <!-- عرض حالة المزامنة -->
+                    <div id="syncStatusContainer" class="d-none">
+                        <div class="alert alert-info">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">جاري المزامنة...</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span id="syncStatusMessage">جاري مزامنة المنتجات...</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-sync me-2"></i>
-                            مزامنة جميع المنتجات مع أمازون
-                        </button>
+                    <div class="alert alert-info">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-info-circle fa-2x"></i>
+                            </div>
+                            <div>
+                                <h6 class="alert-heading mb-1">كيفية المزامنة</h6>
+                                <p class="mb-0">
+                                    هذه العملية ستقوم بمزامنة كميات جميع منتجات FBM مع أمازون.
+                                    سيتم تحديث المنتجات على أمازون بالكميات الموجودة في النظام.
+                                    المزامنة تعمل في خلفية النظام، يمكنك متابعة العمل في صفحات أخرى أثناء المزامنة.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </form>
-            </div>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-warning">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                        <div>
+                            <h6 class="alert-heading mb-1">لا توجد إعدادات نشطة</h6>
+                            <p class="mb-0">
+                                لا توجد إعدادات نشطة للاتصال بأمازون. يرجى إعداد بيانات الاتصال أولاً.
+                                <a href="{% url 'amazon_settings' %}" class="alert-link">إعداد بيانات الاتصال</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-question-circle me-2"></i>
-                    تعليمات المزامنة
-                </h5>
-            </div>
-            <div class="card-body">
-                <h6 class="fw-bold">ماذا سيتم مزامنته؟</h6>
-                <ul>
-                    <li>كميات منتجات FBM فقط</li>
-                    <li>فقط المنتجات التي تم تعيين علامة "FBM" لها</li>
-                </ul>
-                
-                <h6 class="fw-bold">ملاحظات هامة:</h6>
-                <ul>
-                    <li>تتم المزامنة تلقائيًا عند تسجيل عملية بيع</li>
-                    <li>يمكنك أيضًا مزامنة منتج واحد من صفحة تفاصيل المنتج</li>
-                    <li>استخدم هذه الصفحة لمزامنة جميع المنتجات دفعة واحدة</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- حالة المزامنة -->
-<div class="card">
-    <div class="card-header">
-        <h5 class="mb-0">
-            <i class="fas fa-cog me-2"></i>
-            حالة المزامنة
-        </h5>
-    </div>
-    <div class="card-body">
-        <div class="d-flex align-items-center text-info mb-3">
-            <i class="fas fa-info-circle me-2"></i>
-            <span>اضغط على زر "مزامنة جميع المنتجات مع أمازون" لبدء عملية المزامنة. ستظهر نتائج المزامنة هنا.</span>
-        </div>
-        
-        <div class="text-center text-muted my-4">
-            <i class="fas fa-exchange-alt fa-3x mb-3"></i>
-            <p>في المرحلة الأولى، يتم مزامنة الكميات فقط. في المرحلة الثانية، سيتم دعم مزامنة المزيد من البيانات.</p>
+        <div class="card-footer">
+            <a href="{% url 'amazon_settings' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> عودة إلى إعدادات أمازون
+            </a>
         </div>
     </div>
 </div>
@@ -103,9 +125,21 @@
 
 {% block extra_js %}
 <script>
-    // عرض رسائل نجاح أو فشل عملية المزامنة
     document.addEventListener('DOMContentLoaded', function() {
-        // يتم معالجة رسائل Django تلقائيًا عن طريق نظام الإشعارات الجديد
+        const syncForm = document.getElementById('syncForm');
+        const syncButton = document.getElementById('syncButton');
+        const syncStatusContainer = document.getElementById('syncStatusContainer');
+        const syncStatusMessage = document.getElementById('syncStatusMessage');
+        
+        if (syncForm) {
+            syncForm.addEventListener('submit', function(e) {
+                // إظهار حالة المزامنة
+                syncStatusContainer.classList.remove('d-none');
+                syncButton.disabled = true;
+                
+                // بعد تقديم النموذج سيتم إعادة تحميل الصفحة وإظهار رسالة النجاح
+            });
+        }
     });
 </script>
 {% endblock %} 

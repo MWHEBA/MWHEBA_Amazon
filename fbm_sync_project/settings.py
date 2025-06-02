@@ -16,29 +16,29 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from .env file
+# تحميل المتغيرات البيئية من ملف .env
 try:
     from dotenv import load_dotenv
-    load_dotenv(os.path.join(BASE_DIR, '.env'))
+    try:
+        load_dotenv(os.path.join(BASE_DIR, '.env'))
+        # لا نطبع أي رسالة
+    except Exception as e:
+        # لا نطبع أي رسالة
+        pass
 except ImportError:
-    # تجاهل الأخطاء إذا لم يتم العثور على مكتبة dotenv
-    pass
-except Exception:
-    # تجاهل الأخطاء إذا لم يتم العثور على ملف .env
+    # لا نطبع أي رسالة
     pass
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dw5ub!c489kkd244#^9@ft$7tf5)w31l67j+#zcwtf8o)_9-w5')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-m_-qyow5reh@f8a7(-79d^q%nxw-@ks+q@a_c*%2bkgcx8ha8_')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-# قراءة المضيفين المسموح بهم من المتغيرات البيئية
-allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1')
-ALLOWED_HOSTS = allowed_hosts_str.split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -177,12 +177,11 @@ LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL', 'dashboard')
 LOGOUT_REDIRECT_URL = os.environ.get('LOGOUT_REDIRECT_URL', 'home')
 
 # Amazon SP-API Settings
-AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
-AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
-ROLE_ARN = os.environ.get('ROLE_ARN')
-LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
-LWA_CLIENT_SECRET = os.environ.get('LWA_CLIENT_SECRET')
-REFRESH_TOKEN = os.environ.get('REFRESH_TOKEN')
+AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY', '')
+AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY', '')
+ROLE_ARN = os.getenv('ROLE_ARN', '')
+LWA_CLIENT_ID = os.getenv('LWA_CLIENT_ID', '')
+LWA_CLIENT_SECRET = os.getenv('LWA_CLIENT_SECRET', '')
 
 # إعدادات البريد الإلكتروني
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
@@ -191,4 +190,63 @@ EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'webmaster@localhost') 
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
+
+# متغير لتتبع ما إذا تم تحميل الإعدادات بالفعل
+_settings_loaded = False
+# متغير لتتبع ما إذا تم طباعة رسالة الخطأ
+_error_printed = False
+
+# Amazon SP-API Settings Loader Function
+def load_settings_from_database():
+    """
+    محاولة تحميل إعدادات التطبيق من قاعدة البيانات
+    هذه الدالة يتم استدعاؤها بعد تهيئة التطبيق
+    """
+    global _settings_loaded, _error_printed
+    
+    # تجنب تحميل الإعدادات مرتين
+    if _settings_loaded:
+        return
+    
+    try:
+        # التحقق من جاهزية التطبيقات أولاً
+        from django.apps import apps
+        if not apps.ready:
+            # لا نطبع أي رسالة
+            return
+            
+        from amazon_integration.models import AppSettings
+        app_settings = AppSettings.objects.filter(is_active=True).first()
+        if app_settings:
+            # تحديث متغيرات البيئة العامة
+            os.environ['AWS_ACCESS_KEY'] = app_settings.aws_access_key
+            os.environ['AWS_SECRET_KEY'] = app_settings.aws_secret_key
+            os.environ['ROLE_ARN'] = app_settings.role_arn
+            os.environ['LWA_CLIENT_ID'] = app_settings.lwa_client_id
+            os.environ['LWA_CLIENT_SECRET'] = app_settings.lwa_client_secret
+            
+            # تحديث إعدادات جانجو
+            global AWS_ACCESS_KEY, AWS_SECRET_KEY, ROLE_ARN, LWA_CLIENT_ID, LWA_CLIENT_SECRET
+            AWS_ACCESS_KEY = app_settings.aws_access_key
+            AWS_SECRET_KEY = app_settings.aws_secret_key
+            ROLE_ARN = app_settings.role_arn
+            LWA_CLIENT_ID = app_settings.lwa_client_id
+            LWA_CLIENT_SECRET = app_settings.lwa_client_secret
+            
+            # تم تحميل الإعدادات بنجاح
+            _settings_loaded = True
+    except Exception as e:
+        # لا نطبع أي رسالة خطأ
+        pass
+
+# لا نحاول تحميل الإعدادات مباشرة هنا
+# بدلاً من ذلك، سنستخدم إشارة جاهزية التطبيق (AppConfig.ready)
+
+# تعليق محاولة التحميل المباشرة
+# try:
+#     load_settings_from_database()
+# except:
+#     # لن يتم تنفيذ هذه الدالة عند تنفيذ الأوامر مثل makemigrations, migrate
+#     # لأن قاعدة البيانات قد لا تكون جاهزة بعد 
+#     pass 

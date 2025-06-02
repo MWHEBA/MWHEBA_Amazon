@@ -238,9 +238,21 @@
                                     <i class="fas fa-plug me-1"></i> اختبار الاتصال
                                 </a>
                             </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-cogs me-1"></i> الإعدادات
+                        </a>
+                        <ul class="dropdown-menu">
                             <li>
                                 <a class="dropdown-item" href="{% url 'amazon_settings' %}">
-                                    <i class="fas fa-cog me-1"></i> إعدادات الاتصال
+                                    <i class="fas fa-cog me-1"></i> إعدادات التاجر
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'app_settings' %}">
+                                    <i class="fas fa-tools me-1"></i> إعدادات التطبيق
                                 </a>
                             </li>
                         </ul>

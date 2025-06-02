@@ -6,36 +6,35 @@ class ProductCategoryAdmin(admin.ModelAdmin):
     """
     إدارة نموذج فئة المنتج في لوحة الإدارة
     """
-    list_display = ('name',)
-    search_fields = ('name', 'description')
+    list_display = ('name', 'description')
+    search_fields = ('name',)
 
 @admin.register(ProductUnit)
 class ProductUnitAdmin(admin.ModelAdmin):
     """
     إدارة نموذج وحدة المنتج في لوحة الإدارة
     """
-    list_display = ('name', 'symbol')
-    search_fields = ('name', 'symbol')
+    list_display = ('name', 'abbreviation')
+    search_fields = ('name',)
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     """
     إدارة نموذج المنتج في لوحة الإدارة
     """
-    list_display = ('title', 'local_sku', 'amazon_sku', 'quantity', 'is_fbm', 'category', 'unit', 'updated_at')
-    list_filter = ('is_fbm', 'category', 'updated_at')
+    list_display = ('title', 'local_sku', 'amazon_sku', 'quantity', 'is_fbm', 'category', 'unit')
+    list_filter = ('is_fbm', 'category')
     search_fields = ('title', 'local_sku', 'amazon_sku')
     readonly_fields = ('created_at', 'updated_at')
     fieldsets = (
         ('معلومات المنتج الأساسية', {
-            'fields': ('title', 'local_sku', 'amazon_sku', 'category', 'unit')
+            'fields': ('title', 'local_sku', 'amazon_sku', 'quantity', 'is_fbm')
         }),
-        ('معلومات المخزون', {
-            'fields': ('quantity', 'is_fbm')
+        ('معلومات إضافية', {
+            'fields': ('category', 'unit')
         }),
-        ('معلومات الوقت', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
+        ('معلومات النظام', {
+            'fields': ('created_at', 'updated_at')
         }),
     )
 

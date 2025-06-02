@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">{{ title }}</h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">
+                {% if client %}
+                    <i class="fas fa-user-edit"></i> تعديل بيانات العميل
+                {% else %}
+                    <i class="fas fa-user-plus"></i> إضافة عميل جديد
+                {% endif %}
+            </h5>
+            <a href="{% url 'amazon_settings' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> عودة
+            </a>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {% if client %}
+                    <input type="hidden" name="client_id" value="{{ client.client_id }}">
+                {% endif %}
+                
+                <div class="row">
+                    <!-- معلومات العميل -->
+                    <div class="col-12">
+                        <h6 class="border-bottom pb-2 mb-3">معلومات العميل</h6>
+                    </div>
+                    
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="{{ form.client_id.id_for_label }}" class="form-label">معرف العميل</label>
+                        {{ form.client_id }}
+                        <div class="form-text">معرف فريد للعميل (بدون مسافات أو أحرف خاصة)</div>
+                        {% if form.client_id.errors %}
+                            <div class="text-danger">{{ form.client_id.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="{{ form.client_name.id_for_label }}" class="form-label">اسم العميل</label>
+                        {{ form.client_name }}
+                        <div class="form-text">الاسم الكامل للعميل</div>
+                        {% if form.client_name.errors %}
+                            <div class="text-danger">{{ form.client_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="{{ form.marketplace_id.id_for_label }}" class="form-label">سوق أمازون</label>
+                        {{ form.marketplace_id }}
+                        <div class="form-text">السوق الذي يبيع فيه العميل</div>
+                        {% if form.marketplace_id.errors %}
+                            <div class="text-danger">{{ form.marketplace_id.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-12 col-md-6 mb-3">
+                        <div class="form-check mt-4">
+                            {{ form.is_active }}
+                            <label for="{{ form.is_active.id_for_label }}" class="form-check-label">نشط</label>
+                        </div>
+                        {% if form.is_active.errors %}
+                            <div class="text-danger">{{ form.is_active.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- بيانات اعتماد العميل -->
+                    <div class="col-12">
+                        <h6 class="border-bottom pb-2 mb-3 mt-2">بيانات اعتماد العميل</h6>
+                    </div>
+                    
+                    <div class="col-12 mb-3">
+                        <label for="{{ form.refresh_token.id_for_label }}" class="form-label">Refresh Token</label>
+                        {{ form.refresh_token }}
+                        <div class="form-text">رمز التحديث (يبدأ بـ Atzr|IwEB)</div>
+                        {% if form.refresh_token.errors %}
+                            <div class="text-danger">{{ form.refresh_token.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>ملاحظة:</strong> باقي بيانات الاتصال (AWS Access Key, AWS Secret Key, Role ARN, LWA Client ID, LWA Client Secret) 
+                            يتم تخزينها في ملف الإعدادات البيئية (.env) وتستخدم لجميع العملاء.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'amazon_settings' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> إلغاء
+                    </a>
+                    <button type="submit" name="save_client" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

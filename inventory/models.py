@@ -21,10 +21,10 @@ class ProductUnit(models.Model):
     نموذج وحدة المنتج
     """
     name = models.CharField(max_length=50, verbose_name="اسم الوحدة")
-    symbol = models.CharField(max_length=10, verbose_name="رمز الوحدة")
+    abbreviation = models.CharField(max_length=10, verbose_name="اختصار الوحدة")
 
     def __str__(self):
-        return f"{self.name} ({self.symbol})"
+        return f"{self.name} ({self.abbreviation})"
 
     class Meta:
         verbose_name = "وحدة منتج"
@@ -35,10 +35,10 @@ class Product(models.Model):
     نموذج المنتج الذي يحتفظ بمعلومات المنتج الأساسية
     """
     title = models.CharField(max_length=255, verbose_name="عنوان المنتج")
-    local_sku = models.CharField(max_length=100, unique=True, verbose_name="رمز المنتج المحلي")
-    amazon_sku = models.CharField(max_length=100, unique=True, verbose_name="رمز المنتج على أمازون")
+    local_sku = models.CharField(max_length=100, verbose_name="رمز المنتج المحلي", unique=True)
+    amazon_sku = models.CharField(max_length=100, verbose_name="رمز المنتج على أمازون", blank=True, null=True)
     quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)], verbose_name="الكمية")
-    is_fbm = models.BooleanField(default=True, verbose_name="منتج FBM")
+    is_fbm = models.BooleanField(default=False, verbose_name="FBM")
     category = models.ForeignKey(ProductCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name='products', verbose_name="الفئة")
     unit = models.ForeignKey(ProductUnit, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="وحدة القياس")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ الإنشاء")

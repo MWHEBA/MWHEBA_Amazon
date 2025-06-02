@@ -28,13 +28,13 @@ LOGOUT_REDIRECT_URL=login
 LANGUAGE_CODE=en-us
 TIME_ZONE=Africa/Cairo
 
-# إعدادات Amazon SP-API
+# إعدادات Amazon SP-API الثابتة (مشتركة لجميع العملاء)
+# هذه البيانات خاصة بتطبيقك على Amazon Developer وتستخدم لجميع العملاء
 AWS_ACCESS_KEY=your-aws-access-key
 AWS_SECRET_KEY=your-aws-secret-key
 ROLE_ARN=your-role-arn
 LWA_CLIENT_ID=your-lwa-client-id
 LWA_CLIENT_SECRET=your-lwa-client-secret
-REFRESH_TOKEN=your-refresh-token
 
 # إعدادات البريد الإلكتروني
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend

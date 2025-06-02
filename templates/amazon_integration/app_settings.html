@@ -69,27 +69,21 @@
     }
     
     /* تحسين مظهر الحقول */
-    .form-control, .form-select, input[type="password"], #id_refresh_token, #id_marketplace_id, #id_location_id {
-        padding: 0.6rem 1rem !important;
-        border-radius: 6px !important;
-        border: 1px solid #ced4da !important;
-        transition: all 0.3s ease !important;
-        text-align: right !important;
-        direction: rtl !important;
-        height: 46px !important;
-        font-size: 14px !important;
-        background-color: #f8f9fa !important;
-        letter-spacing: normal !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        display: block !important;
-        line-height: 1.5 !important;
+    .form-control {
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        transition: all 0.3s ease;
+        text-align: left;
+        direction: ltr;
+        height: 46px;
+        font-family: monospace;
+        font-size: 14px;
     }
     
-    .form-control:focus, .form-select:focus, input[type="password"]:focus, #id_refresh_token:focus, #id_marketplace_id:focus, #id_location_id:focus {
-        border-color: #ff9900 !important;
-        box-shadow: 0 0 0 0.25rem rgba(255, 153, 0, 0.25) !important;
-        outline: none !important;
+    .form-control:focus {
+        border-color: #ff9900;
+        box-shadow: 0 0 0 0.25rem rgba(255, 153, 0, 0.25);
     }
     
     /* تحسين مظهر البطاقة الرئيسية */
@@ -98,6 +92,22 @@
         border: none;
         border-left: 4px solid #17a2b8;
         border-radius: 0 5px 5px 0;
+    }
+    
+    /* تنسيق الحقول المخفية (كلمات المرور) */
+    input[type="password"] {
+        letter-spacing: normal;
+        font-family: monospace;
+        font-size: 14px;
+    }
+    
+    /* إضافة تنسيق موحد لجميع الحقول */
+    input.form-control[type="password"] {
+        background-color: #f8f9fa;
+    }
+    
+    input.form-control[type="text"] {
+        background-color: #f8f9fa;
     }
     
     .card {
@@ -135,54 +145,65 @@
     
     <div class="card mb-4">
         <div class="card-header">
-            <h5 class="card-title mb-0">إعدادات الاتصال بـ Amazon SP-API</h5>
+            <h5 class="card-title mb-0">بيانات الاتصال الثابتة</h5>
         </div>
         <div class="card-body">
             <form method="post">
                 {% csrf_token %}
                 
                 <div class="row">
-                    <!-- بيانات اعتماد التاجر -->
+                    <!-- بيانات AWS -->
                     <div class="col-12">
-                        <h6 class="border-bottom pb-2 mb-3">بيانات اعتماد التاجر</h6>
+                        <h6 class="border-bottom pb-2 mb-3">بيانات AWS</h6>
+                    </div>
+                    
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="{{ form.aws_access_key.id_for_label }}" class="form-label">AWS Access Key</label>
+                        {{ form.aws_access_key }}
+                        <div class="form-text">مفتاح الوصول لحساب AWS</div>
+                        {% if form.aws_access_key.errors %}
+                            <div class="text-danger">{{ form.aws_access_key.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="{{ form.aws_secret_key.id_for_label }}" class="form-label">AWS Secret Key</label>
+                        {{ form.aws_secret_key }}
+                        <div class="form-text">المفتاح السري لحساب AWS</div>
+                        {% if form.aws_secret_key.errors %}
+                            <div class="text-danger">{{ form.aws_secret_key.errors }}</div>
+                        {% endif %}
                     </div>
                     
                     <div class="col-12 mb-3">
-                        <label for="{{ form.refresh_token.id_for_label }}" class="form-label">Refresh Token</label>
-                        {{ form.refresh_token }}
-                        <div class="form-text">رمز التحديث (يبدأ بـ Atzr|IwEB)</div>
-                        <div class="mt-2">
-                            <a href="https://sellercentral.amazon.eg/apps/authorize/consent?application_id={{ lwa_client_id }}&state=requestState&redirect_uri=https://{{ request.get_host }}{% url 'auth_callback' %}" 
-                               class="btn btn-sm btn-outline-primary" target="_blank">
-                                <i class="fas fa-key me-1"></i> الحصول على Refresh Token عبر أمازون
-                            </a>
-                            <div class="small text-muted mt-2">
-                                <i class="fas fa-info-circle"></i> يستخدم الرابط Client ID: {{ lwa_client_id }}
-                            </div>
-                            <div class="small text-muted mt-1">
-                                <i class="fas fa-info-circle"></i> سوق: مصر (amazon.eg)
-                            </div>
-                        </div>
-                        {% if form.refresh_token.errors %}
-                            <div class="text-danger">{{ form.refresh_token.errors }}</div>
+                        <label for="{{ form.role_arn.id_for_label }}" class="form-label">Role ARN</label>
+                        {{ form.role_arn }}
+                        <div class="form-text">معرف الدور في AWS IAM</div>
+                        {% if form.role_arn.errors %}
+                            <div class="text-danger">{{ form.role_arn.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- بيانات LWA -->
+                    <div class="col-12 mt-3">
+                        <h6 class="border-bottom pb-2 mb-3">بيانات Login with Amazon (LWA)</h6>
+                    </div>
+                    
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="{{ form.lwa_client_id.id_for_label }}" class="form-label">LWA Client ID</label>
+                        {{ form.lwa_client_id }}
+                        <div class="form-text">معرف التطبيق في LWA</div>
+                        {% if form.lwa_client_id.errors %}
+                            <div class="text-danger">{{ form.lwa_client_id.errors }}</div>
                         {% endif %}
                     </div>
                     
                     <div class="col-12 col-md-6 mb-3">
-                        <label for="{{ form.marketplace_id.id_for_label }}" class="form-label">سوق أمازون</label>
-                        {{ form.marketplace_id }}
-                        <div class="form-text">السوق الذي تبيع فيه</div>
-                        {% if form.marketplace_id.errors %}
-                            <div class="text-danger">{{ form.marketplace_id.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="col-12 col-md-6 mb-3">
-                        <label for="{{ form.location_id.id_for_label }}" class="form-label">رقم موقع FBM</label>
-                        {{ form.location_id }}
-                        <div class="form-text">رقم موقع FBM الذي تقدمه أمازون</div>
-                        {% if form.location_id.errors %}
-                            <div class="text-danger">{{ form.location_id.errors }}</div>
+                        <label for="{{ form.lwa_client_secret.id_for_label }}" class="form-label">LWA Client Secret</label>
+                        {{ form.lwa_client_secret }}
+                        <div class="form-text">المفتاح السري للتطبيق في LWA</div>
+                        {% if form.lwa_client_secret.errors %}
+                            <div class="text-danger">{{ form.lwa_client_secret.errors }}</div>
                         {% endif %}
                     </div>
                 </div>

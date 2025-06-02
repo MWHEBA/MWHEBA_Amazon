@@ -1,101 +1,73 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}استيراد منتجات من أمازون | نظام مزامنة FBM{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">لوحة التحكم</a></li>
-                <li class="breadcrumb-item active">استيراد منتجات من أمازون</li>
-            </ol>
-        </nav>
-        <h1 class="display-6 mb-3">
-            <i class="fas fa-file-import me-2 text-primary"></i>
-            استيراد منتجات من أمازون
-        </h1>
-    </div>
-</div>
-
-<div class="row mb-4">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fab fa-amazon me-2"></i>
-                    استيراد منتجات FBM من أمازون
-                </h5>
+<div class="container py-4">
+    <h1 class="mb-4">{{ title }}</h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="card-body">
-                <p class="mb-4">
-                    هذه الأداة تقوم باستيراد منتجات FBM الخاصة بك من أمازون مباشرة إلى النظام.
-                    سيتم استيراد المنتجات الجديدة وتحديث المنتجات الموجودة بالفعل في النظام.
-                </p>
-                
+        {% endfor %}
+    {% endif %}
+    
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">استيراد منتجات من أمازون</h5>
+        </div>
+        <div class="card-body">
+            {% if has_active_settings %}
                 <form method="post">
                     {% csrf_token %}
-                    <div class="mb-4">
-                        <div class="d-flex align-items-center text-warning">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <span>تأكد من إعداد بيانات اعتماد Amazon SP-API بشكل صحيح في ملف <code>.env</code> قبل استخدام هذه الميزة.</span>
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-file-import me-2"></i> استيراد منتجات
+                            </button>
                         </div>
                     </div>
-                    
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-download me-2"></i>
-                            بدء استيراد المنتجات من أمازون
-                        </button>
-                    </div>
                 </form>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-question-circle me-2"></i>
-                    تعليمات الاستيراد
-                </h5>
-            </div>
-            <div class="card-body">
-                <h6 class="fw-bold">ماذا سيتم استيراده؟</h6>
-                <ul>
-                    <li>منتجات FBM الخاصة بك فقط</li>
-                    <li>معلومات المنتج الأساسية (العنوان، SKU، الكمية)</li>
-                </ul>
                 
-                <h6 class="fw-bold">ملاحظات هامة:</h6>
-                <ul>
-                    <li>سيتم تعيين رمز المنتج المحلي مطابقًا لرمز المنتج على أمازون إذا لم يكن موجودًا بالفعل.</li>
-                    <li>المنتجات الموجودة بالفعل سيتم تحديثها فقط.</li>
-                    <li>لن يتم حذف أي منتجات من النظام.</li>
-                </ul>
-            </div>
+                <div class="alert alert-info">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-info-circle fa-2x"></i>
+                        </div>
+                        <div>
+                            <h6 class="alert-heading mb-1">كيفية الاستيراد</h6>
+                            <p class="mb-0">
+                                هذه العملية ستقوم باستيراد منتجات FBM من حساب أمازون. 
+                                سيتم إنشاء منتجات جديدة أو تحديث المنتجات الموجودة بنفس رمز المنتج.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                        <div>
+                            <h6 class="alert-heading mb-1">لا توجد إعدادات نشطة</h6>
+                            <p class="mb-0">
+                                لا توجد إعدادات نشطة للاتصال بأمازون. يرجى إعداد بيانات الاتصال أولاً.
+                                <a href="{% url 'amazon_settings' %}" class="alert-link">إعداد بيانات الاتصال</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    </div>
-</div>
-
-<!-- عملية الاستيراد -->
-<div class="card">
-    <div class="card-header">
-        <h5 class="mb-0">
-            <i class="fas fa-cog me-2"></i>
-            حالة الاستيراد
-        </h5>
-    </div>
-    <div class="card-body">
-        <div class="d-flex align-items-center text-info mb-3">
-            <i class="fas fa-info-circle me-2"></i>
-            <span>اضغط على زر "بدء استيراد المنتجات من أمازون" لبدء عملية الاستيراد. ستظهر نتائج الاستيراد هنا.</span>
-        </div>
-        
-        <div class="text-center text-muted my-4">
-            <i class="fas fa-cloud-download-alt fa-3x mb-3"></i>
-            <p>في المرحلة الأولى، يتم استيراد المنتجات يدويًا. في المرحلة الثانية، سيتم دعم الاستيراد التلقائي.</p>
+        <div class="card-footer">
+            <a href="{% url 'amazon_settings' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> عودة إلى إعدادات أمازون
+            </a>
         </div>
     </div>
 </div>
